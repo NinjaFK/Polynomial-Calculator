@@ -51,7 +51,12 @@ polynomial polynomial::operator*(const polynomial &rhs) const
     {
         for (int j = 0; j < rhs.degree; j++)
         {
+            result.polyExpr[j] += this->polyExpr[i] * rhs.polyExpr[j];
         }
+    }
+    for (int i = 0; i < result.degree; i++)
+    {
+        std::cout << result.polyExpr[i] << '\n';
     }
 }
 
@@ -89,6 +94,11 @@ polynomial polynomial::operator-(int rhs) const
 
 std::ostream &operator<<(std::ostream &out, const polynomial &rhs)
 {
+    for (int i = 0; i < rhs.degree; i++)
+    {
+        out << rhs.polyExpr[rhs.degree - i] << "x^" << rhs.degree << " ";
+    }
+    return out;
 }
 
 polynomial operator+(int lhs, const polynomial &rhs)

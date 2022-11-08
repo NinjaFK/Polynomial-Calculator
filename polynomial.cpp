@@ -44,7 +44,15 @@ polynomial::~polynomial()
 polynomial polynomial::operator*(const polynomial &rhs) const
 {
     polynomial result;
+    result.degree = this->degree + rhs.degree;
+    result.polyExpr = new int[this->degree + rhs.degree + 1];
     // foil
+    for (int i = 0; i < this->degree; i++)
+    {
+        for (int j = 0; j < rhs.degree; j++)
+        {
+        }
+    }
 }
 
 polynomial polynomial::operator*(int rhs) const

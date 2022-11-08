@@ -8,11 +8,15 @@ polynomial::polynomial()
     degree = -1;
     polyExpr = nullptr;
 }
-// deepy copy consuctor
+// deepy copy constuctor
 polynomial::polynomial(const polynomial &poly)
 {
     this->degree = poly.degree;
-    this->polyExpr = poly.polyExpr;
+    this->polyExpr = new int[poly.degree];
+    for (int i = 0; i < this->degree; i++)
+    {
+        this->polyExpr[i] = poly.polyExpr[i];
+    }
 }
 // assign new poly to current
 polynomial::polynomial(int *p, int degree)
@@ -39,6 +43,8 @@ polynomial::~polynomial()
 
 polynomial polynomial::operator*(const polynomial &rhs) const
 {
+    polynomial result;
+    // foil
 }
 
 polynomial polynomial::operator*(int rhs) const

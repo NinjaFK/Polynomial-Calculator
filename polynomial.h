@@ -13,8 +13,8 @@ public:
 	polynomial operator*(int) const;
 	polynomial operator+(const polynomial&) const;
 	polynomial operator+(int) const;
-	const polynomial& operator=(const polynomial&);
-	const polynomial& operator=(int);
+	/* const polynomial& operator=(const polynomial&);
+	const polynomial& operator=(int); */
 	polynomial operator-() const;
 	polynomial operator-(const polynomial&) const;
 	polynomial operator-(int) const;

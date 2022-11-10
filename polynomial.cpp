@@ -47,17 +47,14 @@ polynomial polynomial::operator*(const polynomial &rhs) const
     result.degree = this->degree + rhs.degree;
     result.polyExpr = new int[this->degree + rhs.degree + 1];
     // foil
-    for (int i = 0; i < this->degree; i++)
+    for (int i = 0; i < this->degree + 1; i++)
     {
-        for (int j = 0; j < rhs.degree; j++)
+        for (int j = 0; j < rhs.degree + 1; j++)
         {
-            result.polyExpr[j] += this->polyExpr[i] * rhs.polyExpr[j];
+            result.polyExpr[i + j] += this->polyExpr[i] * rhs.polyExpr[j];
         }
     }
-    for (int i = 0; i < result.degree; i++)
-    {
-        std::cout << result.polyExpr[i] << '\n';
-    }
+    return result;
 }
 
 polynomial polynomial::operator*(int rhs) const
@@ -72,13 +69,13 @@ polynomial polynomial::operator+(int rhs) const
 {
 }
 
-const polynomial &polynomial::operator=(const polynomial &rhs)
+/* const polynomial &polynomial::operator=(const polynomial &rhs)
 {
 }
 
 const polynomial &polynomial::operator=(int rhs)
 {
-}
+} */
 
 polynomial polynomial::operator-() const
 {
@@ -94,9 +91,9 @@ polynomial polynomial::operator-(int rhs) const
 
 std::ostream &operator<<(std::ostream &out, const polynomial &rhs)
 {
-    for (int i = 0; i < rhs.degree; i++)
+    for (int i = 0; i < rhs.degree + 1; i++)
     {
-        out << rhs.polyExpr[rhs.degree - i] << "x^" << rhs.degree << " ";
+        out << rhs.polyExpr[rhs.degree - i] << "x^" << rhs.degree - i << " ";
     }
     return out;
 }

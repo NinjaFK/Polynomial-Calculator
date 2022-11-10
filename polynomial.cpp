@@ -13,7 +13,7 @@ polynomial::polynomial(const polynomial &poly)
 {
     this->degree = poly.degree;
     this->polyExpr = new int[poly.degree];
-    for (int i = 0; i < this->degree; i++)
+    for (int i = 0; i < this->degree + 1; i++)
     {
         this->polyExpr[i] = poly.polyExpr[i];
     }
@@ -98,13 +98,22 @@ polynomial polynomial::operator+(int rhs) const
     return result;
 }
 
-/* const polynomial &polynomial::operator=(const polynomial &rhs)
+const polynomial &polynomial::operator=(const polynomial &rhs)
 {
+    this->degree = rhs.degree;
+    this->polyExpr = new int[rhs.degree + 1];
+    for (int i = 0; i < rhs.degree + 1; i++)
+    {
+        this->polyExpr[i] = rhs.polyExpr[i];
+    }
 }
 
 const polynomial &polynomial::operator=(int rhs)
 {
-} */
+    this->degree = 0;
+    this->polyExpr = new int[1];
+    this->polyExpr[0] = rhs;
+}
 
 polynomial polynomial::operator-() const
 {

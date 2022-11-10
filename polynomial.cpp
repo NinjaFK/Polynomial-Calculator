@@ -32,7 +32,6 @@ polynomial::polynomial(int *p, int degree)
 polynomial::polynomial(int s)
 {
     this->degree = 0;
-    this->polyExpr = nullptr;
     this->polyExpr = new int[1];
     this->polyExpr[0] = s;
 }
@@ -68,10 +67,35 @@ polynomial polynomial::operator*(int rhs) const
 
 polynomial polynomial::operator+(const polynomial &rhs) const
 {
+    polynomial result;
+    if (this->degree > rhs.degree)
+    {
+        result.degree = this->degree;
+    }
+    if (rhs.degree > this->degree)
+    {
+        result.degree = rhs.degree;
+    }
+    result.polyExpr = new int[result.degree + 1];
+    // two for loops
+    for (int i = 0; i < this->degree + 1; i++)
+    {
+        result.polyExpr[i] += this->polyExpr[i];
+    }
+    for (int i = 0; i < rhs.degree + 1; i++)
+    {
+        result.polyExpr[i] += rhs.polyExpr[i];
+    }
+    return result;
 }
 
 polynomial polynomial::operator+(int rhs) const
 {
+    polynomial result;
+    result.degree = this->degree;
+    result.polyExpr = new int[this->degree + 1];
+    result = this->operator+(polynomial(rhs));
+    return result;
 }
 
 /* const polynomial &polynomial::operator=(const polynomial &rhs)

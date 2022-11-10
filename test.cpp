@@ -10,7 +10,7 @@ int main()
     polynomial poly2(p2, 2);
     polynomial result;
 
-    result = poly1 * poly2;
+    result = poly1 * 4;
 
     /* std::cout << "i: " << i << '\n';
             std::cout << "j: " << j << '\n';

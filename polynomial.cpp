@@ -44,7 +44,7 @@ polynomial polynomial::operator*(const polynomial &rhs) const
 {
     polynomial result;
     result.degree = this->degree + rhs.degree;
-    result.polyExpr = new int[this->degree + rhs.degree + 1];
+    result.polyExpr = new int[result.degree + 1];
     // foil
     for (int i = 0; i < this->degree + 1; i++)
     {
@@ -106,6 +106,7 @@ const polynomial &polynomial::operator=(const polynomial &rhs)
     {
         this->polyExpr[i] = rhs.polyExpr[i];
     }
+    return *this;
 }
 
 const polynomial &polynomial::operator=(int rhs)
@@ -113,6 +114,7 @@ const polynomial &polynomial::operator=(int rhs)
     this->degree = 0;
     this->polyExpr = new int[1];
     this->polyExpr[0] = rhs;
+    return *this;
 }
 
 polynomial polynomial::operator-() const
@@ -140,7 +142,7 @@ polynomial operator+(int lhs, const polynomial &rhs)
 {
 }
 
-polynomial operator*(int lhs, const polynomial &rhs)
+polynomial operator*(int lhs, const polynomial &rhs) 3
 {
 }
 

@@ -119,14 +119,43 @@ const polynomial &polynomial::operator=(int rhs)
 
 polynomial polynomial::operator-() const
 {
+    for (int i = 0; i < this->degree + 1; i++)
+    {
+        this->polyExpr[i] = this->polyExpr[i] * -1;
+    }
+    return *this;
 }
 
 polynomial polynomial::operator-(const polynomial &rhs) const
 {
+    polynomial result;
+    if (this->degree > rhs.degree)
+    {
+        result.degree = this->degree;
+    }
+    if (rhs.degree > this->degree)
+    {
+        result.degree = rhs.degree;
+    }
+    result.polyExpr = new int[result.degree + 1];
+    for (int i = 0; i < this->degree + 1; i++)
+    {
+        result.polyExpr[i] += this->polyExpr[i];
+    }
+    for (int i = 0; i < rhs.degree + 1; i++)
+    {
+        result.polyExpr[i] -= rhs.polyExpr[i];
+    }
+    return result;
 }
 
 polynomial polynomial::operator-(int rhs) const
 {
+    polynomial result;
+    result.degree = this->degree;
+    result.polyExpr = new int[this->degree + 1];
+    result = this->operator-(polynomial(rhs));
+    return result;
 }
 
 std::ostream &operator<<(std::ostream &out, const polynomial &rhs)
@@ -142,7 +171,7 @@ polynomial operator+(int lhs, const polynomial &rhs)
 {
 }
 
-polynomial operator*(int lhs, const polynomial &rhs) 3
+polynomial operator*(int lhs, const polynomial &rhs)
 {
 }
 

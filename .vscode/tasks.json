@@ -8,7 +8,7 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "polynomial.cpp",
-                "test.cpp",
+                "FinalBoss.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],

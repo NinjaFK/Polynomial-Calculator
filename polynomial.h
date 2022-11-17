@@ -1,5 +1,10 @@
 #include <iostream>
 
+struct node
+{
+    int data;
+    node *link;
+};
 class polynomial
 {
 public:
@@ -24,6 +29,6 @@ public:
 	friend polynomial operator*(int, const polynomial&);
 	friend polynomial operator-(int, const polynomial&);
 private:
-	int * polyExpr;
+	node * polyExpr;
 	int degree;
 };

@@ -18,72 +18,121 @@ polynomial::polynomial()
 polynomial::polynomial(const polynomial &poly)
 {
     this->degree = poly.degree;
-    this->polyExpr = new int[poly.degree];
-    // for loop to deep copy each part
-    for (int i = 0; i < this->degree + 1; i++)
+    this->polyExpr = new node;
+    node *temp = this->polyExpr;
+    node *temp2 = poly.polyExpr;
+    // this->polyExpr = new int[poly.degree];
+    for (int i = 0; i < this->degree; i++)
     {
-        this->polyExpr[i] = poly.polyExpr[i];
+        temp->data = temp2->data;
+        temp->link = new node;
+        temp = temp->link;
+        temp2 = temp2->link;
     }
+    temp->data = temp2->data;
+    temp->link = nullptr;
+    delete temp;
+    delete temp2;
 }
 // assign new poly to current
 polynomial::polynomial(int *p, int degree)
 {
     this->degree = degree;
-    this->polyExpr = new int[degree + 1];
-    // for loop to copy from the passed array
-    for (int i = 0; i < degree + 1; i++)
+    this->polyExpr = new node;
+    node *temp = this->polyExpr;
+    for (int i = 0; i < this->degree; i++)
     {
-        this->polyExpr[i] = p[i];
+        temp->data = p[i];
+        temp->link = new node;
+        temp = temp->link;
     }
+    temp->data = p[degree];
+    temp->link = nullptr;
+    temp = nullptr;
 }
 // reset poly degree and reset poly to s
 polynomial::polynomial(int s)
 {
     this->degree = 0;
-    this->polyExpr = new int[1];
-    this->polyExpr[0] = s;
+    this->polyExpr = new node;
+    this->polyExpr->data = s;
+    this->polyExpr->link = nullptr;
 }
 // deallocate the array
 polynomial::~polynomial()
 {
-    delete[] polyExpr;
+    node *temp = polyExpr;
+    while (temp != nullptr)
+    {
+        temp = temp->link;
+        delete polyExpr;
+        polyExpr = temp;
+    }
 }
 // Polynomial multiplication with an polynomial
 polynomial polynomial::operator*(const polynomial &rhs) const
 {
     polynomial result;
     result.degree = this->degree + rhs.degree;
-    result.polyExpr = new int[result.degree + 1];
-    // for loop to set the array to zero
-    for (int i = 0; i < result.degree + 1; i++)
+    node *temp = this->polyExpr;
+    node *temp2 = this->polyExpr;
+    node *temp3 = rhs.polyExpr;
+
+    if (result.polyExpr != nullptr)
     {
-        result.polyExpr[i] = 0;
+        while (temp != nullptr)
+        {
+            temp->data = 0;
+            temp = temp->link;
+        }
     }
-    // foil
+    else
+    {
+        result.polyExpr = new node;
+        temp = result.polyExpr;
+        for (int i = 0; i < result.degree; i++)
+        {
+            temp->data = 0;
+            temp->link = new node;
+            temp = temp->link;
+        }
+        temp->data = 0;
+        temp->link = nullptr;
+    }
+
+    temp = result.polyExpr;
+    temp2 = this->polyExpr;
+
     for (int i = 0; i < this->degree + 1; i++)
     {
+        for (int l = 0; l < i; l++)
+        {
+            temp = temp->link;
+        }
         for (int j = 0; j < rhs.degree + 1; j++)
         {
-            // this addes it and moves up after it addeds the multipli of the coefficient
-            result.polyExpr[i + j] += this->polyExpr[i] * rhs.polyExpr[j];
+            temp->data += temp2->data * temp3->data;
+            temp3 = temp3->link;
+            temp = temp->link;
         }
+        temp3 = rhs.polyExpr;
+        temp2 = temp2->link;
+        temp = result.polyExpr;
     }
     return result;
 }
 // polynomail multiplication with an int
 polynomial polynomial::operator*(int rhs) const
 {
-    polynomial result;
-    result.degree = this->degree;
-    result.polyExpr = new int[this->degree + 1];
-    // call operator* with int as a polynomial
-    result = this->operator*(polynomial(rhs));
-    return result;
+    return this->operator*(polynomial(rhs));
 }
 // addition with a polynomial
 polynomial polynomial::operator+(const polynomial &rhs) const
 {
     polynomial result;
+    node *temp = this->polyExpr;
+    node *temp2 = this->polyExpr;
+    node *temp3 = rhs.polyExpr;
     // changes the degree on the larger degree
     if (this->degree > rhs.degree)
     {
@@ -93,103 +142,134 @@ polynomial polynomial::operator+(const polynomial &rhs) const
     {
         result.degree = rhs.degree;
     }
-    result.polyExpr = new int[result.degree + 1];
-    // for loop to set the array to zero
-    for (int i = 0; i < result.degree + 1; i++)
+
+    if (result.polyExpr != nullptr)
     {
-        result.polyExpr[i] = 0;
+        while (temp != nullptr)
+        {
+            temp->data = 0;
+            temp = temp->link;
+        }
     }
-    // These loops add each of the polynomials to result
+    else
+    {
+        result.polyExpr = new node;
+        temp = result.polyExpr;
+        for (int i = 0; i < result.degree; i++)
+        {
+            temp->data = 0;
+            temp->link = new node;
+            temp = temp->link;
+        }
+        temp->data = 0;
+        temp->link = nullptr;
+    }
+    temp = result.polyExpr;
+    temp2 = this->polyExpr;
     for (int i = 0; i < this->degree + 1; i++)
     {
-        result.polyExpr[i] += this->polyExpr[i];
+        temp->data += temp2->data;
+        temp = temp->link;
+        temp2 = temp2->link;
     }
+    node *test2 = result.polyExpr;
+    std::cout << "result = {";
+    while (test2 != nullptr)
+    {
+        std::cout << test2->data << "\n";
+        test2 = test2->link;
+    }
+    std::cout << "}\n";
+    temp = result.polyExpr;
     for (int i = 0; i < rhs.degree + 1; i++)
     {
-        result.polyExpr[i] += rhs.polyExpr[i];
+        temp->data += temp3->data;
+        temp = temp->link;
+        temp3 = temp3->link;
     }
+
+    node *test = result.polyExpr;
+    std::cout << "result = {";
+    while (test != nullptr)
+    {
+        std::cout << test->data << "\n";
+        test = test->link;
+    }
+    std::cout << "}\n";
+
     return result;
 }
 // addition with an int
 polynomial polynomial::operator+(int rhs) const
 {
-    polynomial result;
-    result.degree = this->degree;
-    result.polyExpr = new int[this->degree + 1];
-    // calls operator+ with the int as a polynomial
-    result = this->operator+(polynomial(rhs));
-    return result;
+    return this->operator+(polynomial(rhs));
 }
 // sets the this to the rhs as deep copy
 const polynomial &polynomial::operator=(const polynomial &rhs)
 {
     this->degree = rhs.degree;
+    node *temp = this->polyExpr;
+    node *temp2 = this->polyExpr;
     // if polyExpr is not null dellalocate it
     if (this->polyExpr != nullptr)
     {
-        delete[] this->polyExpr;
+        while (temp != nullptr)
+        {
+            temp = temp->link;
+            delete temp2;
+            temp2 = temp;
+        }
     }
-    this->polyExpr = new int[rhs.degree + 1];
-    // deep copy rhs to this
-    for (int i = 0; i < this->degree + 1; i++)
+
+    this->polyExpr = new node;
+    temp = this->polyExpr;
+    temp2 = rhs.polyExpr;
+    // this->polyExpr = new int[poly.degree];
+    for (int i = 0; i < this->degree; i++)
     {
-        this->polyExpr[i] = rhs.polyExpr[i];
+        temp->data = temp2->data;
+        temp->link = new node;
+        temp = temp->link;
+        temp2 = temp2->link;
     }
+    temp->data = temp2->data;
+    temp->link = nullptr;
+    temp = nullptr;
+    temp2 = nullptr;
     return *this;
 }
 // set this to an int
 const polynomial &polynomial::operator=(int rhs)
 {
     this->degree = 0;
-    this->polyExpr = new int[1];
-    this->polyExpr[0] = rhs;
+    this->polyExpr = new node;
+    this->polyExpr->data = rhs;
+    this->polyExpr->link = nullptr;
     return *this;
 }
 // flips the sign for each coefficient of the polynomia
 polynomial polynomial::operator-() const
 {
-    for (int i = 0; i < this->degree + 1; i++)
+    node *temp = this->polyExpr;
+    while (temp != nullptr)
     {
-        this->polyExpr[i] = this->polyExpr[i] * -1;
+        temp->data = temp->data * -1;
+        std::cout << temp->data << '\n';
+        temp = temp->link;
     }
     return *this;
 }
 // implements the polynomial subtraction operator
 polynomial polynomial::operator-(const polynomial &rhs) const
 {
-    polynomial result;
-    // changes the degree on the larger degree
-    if (this->degree > rhs.degree)
-    {
-        result.degree = this->degree;
-    }
-    else
-    {
-        result.degree = rhs.degree;
-    }
-    result.polyExpr = new int[result.degree + 1];
-    // for loop to set the array to zero
-    for (int i = 0; i < result.degree + 1; i++)
-    {
-        result.polyExpr[i] = 0;
-    }
-    // These loops add each of the polynomials to result
-    for (int i = 0; i < this->degree + 1; i++)
-    {
-        result.polyExpr[i] += this->polyExpr[i];
-    }
-    for (int i = 0; i < rhs.degree + 1; i++)
-    {
-        result.polyExpr[i] -= rhs.polyExpr[i];
-    }
-    return result;
+    return this->operator+(-rhs);
 }
 // implements the polynomial subtraction operator with an int
 polynomial polynomial::operator-(int rhs) const
 {
     polynomial result;
     result.degree = this->degree;
-    result.polyExpr = new int[this->degree + 1];
+    /* result.polyExpr = new int[this->degree + 1]; */
     // calls the operator- with rhs as a polynomial
     result = this->operator-(polynomial(rhs));
     return result;
@@ -198,17 +278,18 @@ polynomial polynomial::operator-(int rhs) const
 // polynomial in its natural form
 std::ostream &operator<<(std::ostream &out, const polynomial &rhs)
 {
-    // prints first value if its not -1 or 1
-    if (abs(rhs.polyExpr[rhs.degree]) != 1 || rhs.degree == 0)
+    node *temp = rhs.polyExpr;
+    int stop;
+    while (temp->link != nullptr)
     {
-        out << rhs.polyExpr[rhs.degree];
+        temp = temp->link;
     }
-    // prints - if the first value is neg
-    if (rhs.polyExpr[rhs.degree] == -1)
+    stop = temp->data;
+
+    if (abs(temp->data) != 1 || rhs.degree == 0)
     {
-        out << '-';
+        out << temp->data;
     }
-    // prints the format based on its degree
     if (rhs.degree > 1)
     {
         out << "x^" << rhs.degree << " ";
@@ -217,16 +298,21 @@ std::ostream &operator<<(std::ostream &out, const polynomial &rhs)
     {
         out << "x ";
     }
-    // for loop for longer polynomial
+
+    // for loop
     for (int i = 1; i < rhs.degree + 1; i++)
     {
-        // checks if the coefficient is zero
-        if (rhs.polyExpr[rhs.degree - i] == 0)
+        temp = rhs.polyExpr;
+        for (int j = i; j < rhs.degree; j++)
+        {
+            temp = temp->link;
+        }
+        stop = temp->data;
+        if (temp->data == 0)
         {
             continue;
         }
-        // print the sign
-        if (rhs.polyExpr[rhs.degree - i] < 0)
+        else if (temp->data < 0)
         {
             out << "- ";
         }
@@ -234,13 +320,10 @@ std::ostream &operator<<(std::ostream &out, const polynomial &rhs)
         {
             out << "+ ";
         }
-        // print if coefficient not 1 or -1
-        // or the degree is 0 (whole number)
-        if (abs(rhs.polyExpr[rhs.degree - i]) != 1 || rhs.degree - i == 0)
+        if (abs(temp->data) != 1 || rhs.degree - i == 0)
         {
-            out << abs(rhs.polyExpr[rhs.degree - i]);
+            out << abs(temp->data);
         }
-        // based on degree print what is needed
         if (rhs.degree - i > 1)
         {
             out << "x^" << rhs.degree - i << " ";

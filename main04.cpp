@@ -10,6 +10,7 @@ int main()
 	polynomial poly2(p2, 3);
 	polynomial result;
 
+	//poly1.operator-();
 	result = poly2 - poly1;
 	std::cout << "result = " << result << "\n";
 

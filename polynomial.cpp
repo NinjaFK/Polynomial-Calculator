@@ -172,14 +172,6 @@ polynomial polynomial::operator+(const polynomial &rhs) const
         temp = temp->link;
         temp2 = temp2->link;
     }
-    node *test2 = result.polyExpr;
-    std::cout << "result = {";
-    while (test2 != nullptr)
-    {
-        std::cout << test2->data << "\n";
-        test2 = test2->link;
-    }
-    std::cout << "}\n";
     temp = result.polyExpr;
     for (int i = 0; i < rhs.degree + 1; i++)
     {
@@ -187,16 +179,6 @@ polynomial polynomial::operator+(const polynomial &rhs) const
         temp = temp->link;
         temp3 = temp3->link;
     }
-
-    node *test = result.polyExpr;
-    std::cout << "result = {";
-    while (test != nullptr)
-    {
-        std::cout << test->data << "\n";
-        test = test->link;
-    }
-    std::cout << "}\n";
-
     return result;
 }
 // addition with an int
@@ -250,14 +232,23 @@ const polynomial &polynomial::operator=(int rhs)
 // flips the sign for each coefficient of the polynomia
 polynomial polynomial::operator-() const
 {
+    polynomial result;
+    result.degree = this->degree;
+    result.polyExpr = new node;
     node *temp = this->polyExpr;
-    while (temp != nullptr)
+    node *temp2 = result.polyExpr;
+    while (temp->link != nullptr)
     {
-        temp->data = temp->data * -1;
-        std::cout << temp->data << '\n';
+        temp2->data = temp->data * -1;
+        temp2->link = new node;
+        temp2 = temp2->link;
         temp = temp->link;
     }
-    return *this;
+    temp2->data = temp->data * -1;
+    temp2->link = nullptr;
+    temp = nullptr;
+    temp2 = nullptr;
+    return result;
 }
 // implements the polynomial subtraction operator
 polynomial polynomial::operator-(const polynomial &rhs) const
@@ -267,12 +258,7 @@ polynomial polynomial::operator-(const polynomial &rhs) const
 // implements the polynomial subtraction operator with an int
 polynomial polynomial::operator-(int rhs) const
 {
-    polynomial result;
-    result.degree = this->degree;
-    /* result.polyExpr = new int[this->degree + 1]; */
-    // calls the operator- with rhs as a polynomial
-    result = this->operator-(polynomial(rhs));
-    return result;
+    return this->operator-(polynomial(rhs));
 }
 // output operator, outputs the
 // polynomial in its natural form
@@ -338,15 +324,15 @@ std::ostream &operator<<(std::ostream &out, const polynomial &rhs)
 // makes lhs a polynomial and use the appropriate operator
 polynomial operator+(int lhs, const polynomial &rhs)
 {
-    return (polynomial(lhs)).operator+(rhs);
+    return rhs + lhs;
 }
 // makes lhs a polynomial and use the appropriate operator
 polynomial operator*(int lhs, const polynomial &rhs)
 {
-    return (polynomial(lhs)).operator*(rhs);
+    return rhs * lhs;
 }
 // makes lhs a polynomial and use the appropriate operator
 polynomial operator-(int lhs, const polynomial &rhs)
 {
-    return (polynomial(lhs)).operator-(rhs);
+    return -rhs + lhs;
 }

@@ -265,13 +265,10 @@ polynomial polynomial::operator-(int rhs) const
 std::ostream &operator<<(std::ostream &out, const polynomial &rhs)
 {
     node *temp = rhs.polyExpr;
-    int stop;
     while (temp->link != nullptr)
     {
         temp = temp->link;
     }
-    stop = temp->data;
-
     if (abs(temp->data) != 1 || rhs.degree == 0)
     {
         out << temp->data;
@@ -293,7 +290,6 @@ std::ostream &operator<<(std::ostream &out, const polynomial &rhs)
         {
             temp = temp->link;
         }
-        stop = temp->data;
         if (temp->data == 0)
         {
             continue;
